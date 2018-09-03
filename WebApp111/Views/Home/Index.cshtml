@@ -1,0 +1,67 @@
+﻿@*@model WebApp111.Models.ModelModel*@
+
+<div class="jumbotron">
+
+
+    <div class="form-group">
+        @*@Ajax.ActionLink(
+            "load partial view",
+            "PartialView",
+            "Home",
+            new AjaxOptions { UpdateTargetId = "result" }
+        )*@
+        <div class="qqq" data-number="77">
+            @Html.Partial("PartialV")
+        </div>
+        <div class="qqq" data-number="99">
+            @Html.Partial("PartialV")
+        </div>
+        <div class="qqq" data-number="55">
+            @Html.Partial("PartialV")
+        </div>
+       
+
+
+    </div>
+
+
+</div>
+
+
+<script type="text/javascript">
+
+	$(function() {
+        $('.user-signature').change(function () {
+            var temp = $(this).parents('.qqq').data('number');
+            
+			var signatureInput = $('#user-signature');
+			var apiUrl = '@Href("/Home/SaveUserSignature/")';@*@Model.Id.ToString()";*@
+			var myFormData = new FormData();
+            myFormData.append('signatureFile', signatureInput.prop('files')[0]);
+            myFormData.append('file', temp);
+            myFormData.append('id', 20);
+
+
+			$.ajax({
+				url: apiUrl,
+				type: 'POST',
+				processData: false, // important
+				contentType: false, // important
+				dataType: 'json',
+				data: myFormData,
+				success: function (data) {
+				    if (data.success) {
+				        var arrayBufferView = new Uint8Array(data.image);
+				        var blob = new Blob([arrayBufferView], { type: "image/*" });
+				        var urlCreator = window.URL || window.webkitURL;
+				        var imageUrl = urlCreator.createObjectURL(blob);
+				        document.getElementById("user-signature-image").src = imageUrl;
+				    } else {
+				        console.error('Error: ', data.error);
+				    }
+				}
+			});
+		});
+    });
+
+</script>
